@@ -3,16 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  
-  /* Glass Theme */
-  --glass-bg: rgba(10, 10, 10, 0.6);
-  --glass-border: rgba(5, 5, 5, 0.867);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
-  
-  /* Neon Accents - Blue Theme */
-  --accent-primary: #00FFFF;   /* Cyan */
-  --accent-secondary: #0080FF; /* Azure */
-  --accent-tertiary: #0000FF;  /* Blue */
+
+  /* Premium Health Theme - Emerald & Slate */
+  --accent-primary: #10B981;
+  /* Emerald 500 */
+  --accent-secondary: #3B82F6;
+  /* Blue 500 */
+  --accent-tertiary: #6366F1;
+  /* Indigo 500 */
+
+  /* Darker, richer background for glass effect */
+  --glass-bg: rgba(20, 20, 25, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
@@ -50,13 +53,13 @@ body {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), var(--glass-shadow);
     transform: translateY(-2px);
   }
-  
+
   .glass-input {
     background: rgba(255, 255, 255, 0.03);
     border-bottom: 1px solid var(--glass-border);
     transition: all 0.3s ease;
   }
-  
+
   .glass-input:focus {
     background: rgba(255, 255, 255, 0.08);
     border-bottom-color: var(--accent-secondary);
