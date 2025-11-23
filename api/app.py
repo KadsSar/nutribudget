@@ -6,7 +6,7 @@ import logging
 from planner import load_dataset, planner
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
