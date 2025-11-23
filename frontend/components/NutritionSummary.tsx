@@ -24,7 +24,7 @@ export default function NutritionSummary({ totals, coverage }: Props) {
     const fromCost = dispCost;
     const fromCal = dispCalories;
     const fromProt = dispProtein;
-    const targetCost = totals.cost;
+    const targetCost = totals.total_spent;
     const targetCalories = totals.calories;
     const targetProtein = totals.protein;
 
@@ -54,7 +54,7 @@ export default function NutritionSummary({ totals, coverage }: Props) {
   return (
     <section className="h-full flex flex-col justify-center text-white">
       <h2 className="text-xl font-medium mb-6 border-b border-white/10 pb-2">Summary</h2>
-      
+
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div>
           <p className="text-sm text-white/60">Cost</p>
@@ -74,12 +74,12 @@ export default function NutritionSummary({ totals, coverage }: Props) {
         <div>
           <div className="flex justify-between text-sm mb-1">
             <span className="text-white/80">Calorie Coverage</span>
-            <span>{(coverage.calories * 100).toFixed(0)}%</span>
+            <span>{coverage.calories.percentage.toFixed(0)}%</span>
           </div>
           <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-[var(--accent-secondary)] transition-all duration-1000 ease-out"
-              style={{ width: `${Math.min(coverage.calories * 100, 100)}%` }}
+              style={{ width: `${Math.min(coverage.calories.percentage, 100)}%` }}
             />
           </div>
         </div>
@@ -87,12 +87,12 @@ export default function NutritionSummary({ totals, coverage }: Props) {
         <div>
           <div className="flex justify-between text-sm mb-1">
             <span className="text-white/80">Protein Coverage</span>
-            <span>{(coverage.protein * 100).toFixed(0)}%</span>
+            <span>{coverage.protein.percentage.toFixed(0)}%</span>
           </div>
           <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-[var(--accent-tertiary)] transition-all duration-1000 ease-out"
-              style={{ width: `${Math.min(coverage.protein * 100, 100)}%` }}
+              style={{ width: `${Math.min(coverage.protein.percentage, 100)}%` }}
             />
           </div>
         </div>
