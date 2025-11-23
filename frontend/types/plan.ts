@@ -1,32 +1,50 @@
 export type BasketItem = {
   product_id: string | number;
-  name: string;
+  product_name: string;
   store: string;
   category: string;
-  clusterLabel: number;
-  clusterName: string;
-  unitGrams: number;
-  units: number;
-  cost: number;
-  calories: number;
-  protein: number;
+  cluster_label: string;
+  quantity_units: number;
+  unit: string;
+  estimated_cost: number;
+  health_score: number;
+  nutri_score_app: number;
+  price_per_100g: number;
+  // Optional raw data if needed
+  calories?: number;
+  protein?: number;
 };
 
 export type PlanTotals = {
-  cost: number;
+  total_spent: number;
+  budget: number;
   calories: number;
   protein: number;
+  fiber: number;
 };
 
 export type PlanCoverage = {
-  calories: number; // fraction (0-1)
-  protein: number; // fraction (0-1)
+  calories: {
+    target: number;
+    actual: number;
+    percentage: number;
+  };
+  protein: {
+    target: number;
+    actual: number;
+    percentage: number;
+  };
 };
 
 export type PlanResponse = {
-  basket: BasketItem[];
+  inputs: {
+    budget: number;
+    people: number;
+    dietType: string;
+  };
+  items: BasketItem[];
   totals: PlanTotals;
-  coverage: PlanCoverage;
-  cluster_breakdown: Record<string, number>;
-  processing_breakdown: Record<string, number>;
+  coverage: PlanCoverage; // Note: API might need to return coverage or we calculate it in frontend
+  clusterBreakdown: Record<string, number>;
+  processingBreakdown?: Record<string, number>; // Optional if backend sends it
 };
