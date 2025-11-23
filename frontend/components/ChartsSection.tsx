@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 type Props = {
@@ -35,9 +36,8 @@ export default function ChartsSection({
             {Object.entries(clusterBreakdown).map(([label, share], i) => (
               <li
                 key={label}
-                className={`transition-all duration-500 ${
-                  visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
-                }`}
+                className={`transition-all duration-500 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
+                  }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <div className="flex justify-between text-sm mb-1.5">
@@ -67,9 +67,8 @@ export default function ChartsSection({
             {Object.entries(processingBreakdown).map(([label, share], i) => (
               <li
                 key={label}
-                className={`transition-all duration-500 ${
-                  visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
-                }`}
+                className={`transition-all duration-500 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
+                  }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <div className="flex justify-between text-sm mb-1.5">
