@@ -1,0 +1,10 @@
+flask
+flask-cors
+pandas
+<<<<<<< HEAD:backend/requirements.txt
+numpy
+scikit-learn
+pulp
+=======
+pulp
+>>>>>>> f79b90e3237b3fdff7915053e2915328340c8d98:api/requirements.txt
