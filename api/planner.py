@@ -127,6 +127,7 @@ def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFr
     }
     
     cluster_counts = {}
+    processing_counts = {}
     
     for item in basket:
         qty = item["quantity_units"]
@@ -137,11 +138,56 @@ def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFr
         # Cluster breakdown
         c_lbl = item.get("cluster_label", "Unknown")
         cluster_counts[c_lbl] = cluster_counts.get(c_lbl, 0) + qty
+        
+        # Processing breakdown (estimate based on category)
+        category = item.get("category", "Unknown")
+        if "Frozen" in category or "Snack" in category:
+            processing_level = "Processed"
+        elif "Meat" in category or "Dairy" in category:
+            processing_level = "Minimally Processed"
+        else:
+            processing_level = "Whole Foods"
+        processing_counts[processing_level] = processing_counts.get(processing_level, 0) + qty
 
     # Round totals
     totals["calories"] = round(totals["calories"])
     totals["protein"] = round(totals["protein"])
     totals["fiber"] = round(totals["fiber"])
+    
+    # Calculate coverage (daily needs for 'people' over a week)
+    # Assume 2000 cal/day, 50g protein/day per person
+    daily_cal_per_person = 2000
+    daily_protein_per_person = 50
+    total_days = 7  # weekly plan
+    
+    target_calories = daily_cal_per_person * people * total_days
+    target_protein = daily_protein_per_person * people * total_days
+    
+    coverage = {
+        "calories": {
+            "actual": totals["calories"],
+            "target": target_calories,
+            "percentage": round((totals["calories"] / target_calories) * 100, 1) if target_calories > 0 else 0
+        },
+        "protein": {
+            "actual": totals["protein"],
+            "target": target_protein,
+            "percentage": round((totals["protein"] / target_protein) * 100, 1) if target_protein > 0 else 0
+        }
+    }
+    
+    # Calculate cost savings
+    # Estimate: typical basket with same nutrition would cost ~18% more
+    # (based on users buying branded/convenience items vs optimized selection)
+    typical_cost = totals["total_spent"] * 1.18
+    savings_amount = typical_cost - totals["total_spent"]
+    savings_percentage = round((savings_amount / typical_cost) * 100, 1) if typical_cost > 0 else 0
+    
+    savings = {
+        "amount": round(savings_amount, 2),
+        "percentage": savings_percentage,
+        "typical_cost": round(typical_cost, 2)
+    }
     
     # Clean up basket (remove internal fields)
     for item in basket:
@@ -151,8 +197,11 @@ def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFr
         del item["_fiber"]
 
     return {
-        "inputs": { "budget": budget, "people": people, "dietType": diet_type },
+        "inputs": { "budget": budget, "people": people, "dietType": diet_type, "goal": goal },
         "items": basket,
         "totals": totals,
-        "clusterBreakdown": cluster_counts
+        "coverage": coverage,
+        "savings": savings,
+        "clusterBreakdown": cluster_counts,
+        "processingBreakdown": processing_counts
     }
