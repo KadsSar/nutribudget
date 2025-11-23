@@ -44,7 +44,12 @@ export type PlanResponse = {
   };
   items: BasketItem[];
   totals: PlanTotals;
-  coverage: PlanCoverage; // Note: API might need to return coverage or we calculate it in frontend
+  coverage: PlanCoverage;
+  savings?: {
+    amount: number;
+    percentage: number;
+    typical_cost: number;
+  };
   clusterBreakdown: Record<string, number>;
-  processingBreakdown?: Record<string, number>; // Optional if backend sends it
+  processingBreakdown?: Record<string, number>;
 };
