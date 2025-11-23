@@ -31,9 +31,14 @@ export default function BudgetForm({ onSubmit, loading = false }: Props) {
           <span className="text-sm text-white/90">Budget</span>
           <input
             className="glass-input w-full px-3 py-2 text-white placeholder:text-white/40 rounded-t-md focus:border-b-2"
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={budget}
-            onChange={(e) => setBudget(Number(e.target.value))}
+            onChange={(e) => {
+              const val = parseInt(e.target.value) || 0;
+              setBudget(val);
+            }}
           />
         </label>
 
@@ -41,9 +46,14 @@ export default function BudgetForm({ onSubmit, loading = false }: Props) {
           <span className="text-sm text-white/90">People</span>
           <input
             className="glass-input w-full px-3 py-2 text-white placeholder:text-white/40 rounded-t-md focus:border-b-2"
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={people}
-            onChange={(e) => setPeople(Number(e.target.value))}
+            onChange={(e) => {
+              const val = parseInt(e.target.value) || 0;
+              setPeople(val);
+            }}
           />
         </label>
 
@@ -74,17 +84,16 @@ export default function BudgetForm({ onSubmit, loading = false }: Props) {
         </label>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-6">
         <button
-          className={`w-full rounded-lg px-6 py-3 text-white font-medium tracking-wide transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed ${
-            loading
-              ? "bg-white/10"
-              : "bg-gradient-to-r from-[var(--accent-primary)] via-[var(--accent-secondary)] to-[var(--accent-tertiary)] text-black hover:shadow-[0_0_20px_rgba(92,255,234,0.4)] hover:scale-[1.02]"
-          }`}
+          className={`w-full rounded-xl px-6 py-4 text-white font-semibold tracking-wide transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed ${loading
+            ? "bg-white/10"
+            : "bg-gradient-to-r from-emerald-500 via-cyan-500 to-purple-600 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-[1.02] active:scale-[0.98]"
+            }`}
           type="submit"
           disabled={loading}
         >
-          {loading ? "Generating..." : "Generate Plan"}
+          {loading ? "✨ Generating..." : "Generate Plan"}
         </button>
       </div>
     </form>
