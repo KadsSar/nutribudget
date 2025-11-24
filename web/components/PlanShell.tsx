@@ -172,6 +172,7 @@ export default function PlanShell() {
             </div>
           )}
         </div>
+      )}
 
       {/* Disclaimer Footer */}
       <div className="max-w-6xl mx-auto mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
