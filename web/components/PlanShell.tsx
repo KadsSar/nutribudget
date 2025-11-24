@@ -57,20 +57,20 @@ export default function PlanShell() {
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 py-8">
       {/* Hero Header */}
-      <section className="text-center space-y-4 mb-12">
-        <div className="inline-flex items-center gap-3 mb-2">
-          <span className="text-5xl">🥗</span>
-          <h1 className="text-5xl sm:text-6xl font-bold text-emerald-600 tracking-tight">
+      <section className="text-center space-y-4 mb-12 animate-in fade-in slide-in-from-bottom duration-700">
+        <div className="inline-flex items-center gap-3 mb-2 group">
+          <span className="text-5xl animate-bounce">🥗</span>
+          <h1 className="text-5xl sm:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 tracking-tight hover:scale-105 transition-transform duration-300 drop-shadow-lg">
             NutriBudget
           </h1>
         </div>
-        <p className="text-gray-600 text-lg sm:text-xl max-w-2xl mx-auto">
-          Smart grocery planning that balances <span className="text-emerald-600 font-semibold">nutrition</span> and <span className="text-amber-600 font-semibold">budget</span>
+        <p className="text-gray-700 text-lg sm:text-xl max-w-2xl mx-auto font-medium">
+          Smart grocery planning that balances <span className="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded">nutrition</span> and <span className="text-amber-600 font-bold bg-amber-50 px-2 py-1 rounded">budget</span>
         </p>
 
         {/* Savings Badge */}
         {plan?.savings && (
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-full text-amber-900 font-medium text-sm shadow-sm animate-in fade-in slide-in-from-top">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-100 to-orange-100 border-2 border-amber-300 rounded-full text-amber-900 font-medium text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 animate-in fade-in slide-in-from-top">
             <TrendingDown className="w-5 h-5 text-amber-600" />
             <span>
               You saved <strong className="text-amber-700">${plan.savings.amount.toFixed(2)}</strong> ({plan.savings.percentage}% less than typical shopping)
@@ -81,7 +81,7 @@ export default function PlanShell() {
 
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 max-w-6xl mx-auto">
         {/* Input Form */}
-        <div className="rounded-xl p-6 bg-white border-2 border-emerald-200 hover:border-emerald-300 transition-all duration-300 shadow-md hover:shadow-lg">
+        <div className="group rounded-xl p-6 bg-white/90 backdrop-blur-sm border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-500 shadow-lg hover:shadow-emerald-500/30 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-2xl">🎯</span>
             <h2 className="text-xl font-semibold text-gray-800">Plan Your Budget</h2>
@@ -116,7 +116,7 @@ export default function PlanShell() {
 
         {/* Meal Suggestions */}
         {plan && plan.items.length > 0 && (
-          <div className="rounded-xl p-6 bg-white border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 shadow-md hover:shadow-lg">
+          <div className="group rounded-xl p-6 bg-white/90 backdrop-blur-sm border-2 border-blue-200 hover:border-blue-400 transition-all duration-500 shadow-lg hover:shadow-blue-500/30 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1">
             <MealSuggestions items={plan.items} dietType={plan.inputs.dietType} />
           </div>
         )}
@@ -129,7 +129,7 @@ export default function PlanShell() {
         )}
 
         {/* Basket with Export */}
-        <div className="rounded-xl p-6 bg-white border-2 border-amber-200 hover:border-amber-300 transition-all duration-300 shadow-md hover:shadow-lg lg:col-span-2">
+        <div className="group rounded-xl p-6 bg-white/90 backdrop-blur-sm border-2 border-amber-200 hover:border-amber-400 transition-all duration-500 shadow-lg hover:shadow-amber-500/30 hover:shadow-2xl hover:scale-[1.01] hover:-translate-y-1 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl">🛒</span>
