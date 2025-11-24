@@ -1,21 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Fresh Health Theme - Light Mode */
+  --background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  --foreground: #1f2937;
 
-  /* Premium Health Theme - Emerald & Slate */
-  --accent-primary: #10B981;
-  /* Emerald 500 */
-  --accent-secondary: #3B82F6;
-  /* Blue 500 */
-  --accent-tertiary: #6366F1;
-  /* Indigo 500 */
+  /* Health-Focused Color Palette */
+  --color-fresh-green: #10B981;
+  /* Emerald 500 - Primary health color */
+  --color-warm-orange: #F59E0B;
+  /* Amber 500 - Budget/savings */
+  --color-trust-blue: #3B82F6;
+  /* Blue 500 - Data/trust */
+  --color-leaf-green: #059669;
+  /* Emerald 600 - Dark accent */
+  --color-sunshine: #FBBF24;
+  /* Amber 400 - Highlights */
 
-  /* Darker, richer background for glass effect */
-  --glass-bg: rgba(20, 20, 25, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  /* Card & Component Colors */
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --card-border: #e5e7eb;
+
+  /* Text Colors */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
 }
 
 @theme inline {
@@ -27,42 +38,44 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000000;
-    --foreground: #ededed;
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer utilities {
-  .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+  .fresh-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
     transition: all 0.3s ease;
   }
 
-  .glass-card:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), var(--glass-shadow);
+  .fresh-card:hover {
+    box-shadow: var(--card-shadow-hover);
     transform: translateY(-2px);
   }
 
-  .glass-input {
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid var(--glass-border);
-    transition: all 0.3s ease;
+  .budget-badge {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    color: #92400E;
+    border: 1px solid #FCD34D;
   }
 
-  .glass-input:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-bottom-color: var(--accent-secondary);
-    outline: none;
+  .health-badge {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    color: #065F46;
+    border: 1px solid #6EE7B7;
   }
 }
