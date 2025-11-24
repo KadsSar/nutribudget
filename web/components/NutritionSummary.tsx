@@ -48,50 +48,48 @@ export default function NutritionSummary({ totals, coverage }: Props) {
   }, [totals]);
 
   if (!totals || !coverage) {
-    return <p className="italic text-white/70">No summary yet.</p>;
+    return <p className="italic text-gray-500">No summary yet.</p>;
   }
 
   return (
-    <section className="h-full flex flex-col justify-center text-white">
-      <h2 className="text-xl font-medium mb-6 border-b border-white/10 pb-2">Summary</h2>
-
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div>
-          <p className="text-sm text-white/60">Cost</p>
-          <p className="text-2xl font-light text-[var(--accent-primary)]">${dispCost.toFixed(2)}</p>
+    <section className="h-full flex flex-col justify-center">
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="text-center p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+          <p className="text-xs text-gray-600 font-medium mb-1">Total Cost</p>
+          <p className="text-2xl font-bold text-emerald-600">${dispCost.toFixed(2)}</p>
         </div>
-        <div>
-          <p className="text-sm text-white/60">Calories</p>
-          <p className="text-2xl font-light text-[var(--accent-secondary)]">{dispCalories.toFixed(0)}</p>
+        <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-xs text-gray-600 font-medium mb-1">Calories</p>
+          <p className="text-2xl font-bold text-blue-600">{dispCalories.toFixed(0)}</p>
         </div>
-        <div>
-          <p className="text-sm text-white/60">Protein</p>
-          <p className="text-2xl font-light text-[var(--accent-tertiary)]">{dispProtein.toFixed(1)}g</p>
+        <div className="text-center p-3 bg-amber-50 rounded-lg border border-amber-200">
+          <p className="text-xs text-gray-600 font-medium mb-1">Protein</p>
+          <p className="text-2xl font-bold text-amber-600">{dispProtein.toFixed(1)}g</p>
         </div>
       </div>
 
       <div className="space-y-4">
         <div>
-          <div className="flex justify-between text-sm mb-1">
-            <span className="text-white/80">Calorie Coverage</span>
-            <span>{coverage.calories.percentage.toFixed(0)}%</span>
+          <div className="flex justify-between text-sm mb-2">
+            <span className="text-gray-700 font-medium">Calorie Coverage</span>
+            <span className="font-semibold text-blue-600">{coverage.calories.percentage.toFixed(0)}%</span>
           </div>
-          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+          <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden border border-gray-200">
             <div
-              className="h-full bg-[var(--accent-secondary)] transition-all duration-1000 ease-out"
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-1000 ease-out shadow-sm"
               style={{ width: `${Math.min(coverage.calories.percentage, 100)}%` }}
             />
           </div>
         </div>
 
         <div>
-          <div className="flex justify-between text-sm mb-1">
-            <span className="text-white/80">Protein Coverage</span>
-            <span>{coverage.protein.percentage.toFixed(0)}%</span>
+          <div className="flex justify-between text-sm mb-2">
+            <span className="text-gray-700 font-medium">Protein Coverage</span>
+            <span className="font-semibold text-emerald-600">{coverage.protein.percentage.toFixed(0)}%</span>
           </div>
-          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+          <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden border border-gray-200">
             <div
-              className="h-full bg-[var(--accent-tertiary)] transition-all duration-1000 ease-out"
+              className="h-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-1000 ease-out shadow-sm"
               style={{ width: `${Math.min(coverage.protein.percentage, 100)}%` }}
             />
           </div>
