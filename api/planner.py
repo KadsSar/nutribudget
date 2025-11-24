@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from typing import Dict, Any
+import ml_utils
 
 def load_dataset(csv_path: str) -> pd.DataFrame:
     """
@@ -16,9 +17,17 @@ def load_dataset(csv_path: str) -> pd.DataFrame:
         print(f"Error: Could not find file at {csv_path}")
         return pd.DataFrame()
 
-def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFrame) -> Dict[str, Any]:
+def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFrame, use_ml: bool = True) -> Dict[str, Any]:
     """
-    Generates a grocery plan using greedy selection based on value-for-money.
+    Generates a grocery plan using ML-powered intelligent selection or greedy fallback.
+    
+    Args:
+        budget: Weekly budget in dollars
+        people: Number of people
+        diet_type: Diet preference (veg/non-veg/vegan)
+        goal: Health goal (balanced/high_protein/low_sugar)
+        df: Product dataframe
+        use_ml: Use ML models for selection (default True)
     """
     
     # 1. Filter by Diet
@@ -31,62 +40,95 @@ def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFr
         if "veg_nonveg" in filtered.columns:
             filtered = filtered[filtered["veg_nonveg"].astype(str).str.lower().str.contains("veg")]
     
-    # 2. Calculate Value Metric
-    # Metric = nutri_score_app / price_per_100g
-    # Avoid division by zero
+    # 2. Calculate Value Metric with ML or Fallback
     filtered = filtered[filtered["price_per_100g"] > 0.01].copy()
     
-    # Base metric
-    filtered["value_metric"] = filtered["nutri_score_app"] / filtered["price_per_100g"]
-    
-    # Goal Adjustments
-    if goal == "high_protein":
-        # Boost items with high protein per dollar
-        # We can use the 'protein' column (g)
-        if "protein" in filtered.columns:
-            # Normalize protein roughly (0-30g usually)
-            # Add a bonus to value_metric
-            filtered["value_metric"] += (filtered["protein"] / filtered["price_per_100g"]) * 0.5
+    # Try ML-based scoring
+    if use_ml and ml_utils.models_available():
+        print("🤖 Using ML-powered product selection")
+        
+        # Get ML predictions
+        ml_score = ml_utils.calculate_ml_score(filtered)
+        
+        if ml_score is not None:
+            # Use ML score as base
+            filtered["value_metric"] = ml_score
             
-    elif goal == "low_sugar":
-        # Penalize sugar
-        if "sugar" in filtered.columns:
-            filtered["value_metric"] -= (filtered["sugar"] / filtered["price_per_100g"]) * 0.5
+            # Goal-specific ML adjustments
+            if goal == "high_protein":
+                if "protein" in filtered.columns:
+                    protein_bonus = (filtered["protein"] / filtered["price_per_100g"]) * 0.7
+                    filtered["value_metric"] += protein_bonus
+                    
+            elif goal == "low_sugar":
+                if "sugar" in filtered.columns:
+                    sugar_penalty = (filtered["sugar"] / filtered["price_per_100g"]) * 0.7
+                    filtered["value_metric"] -= sugar_penalty
+            
+            # UX: Boost non-veg items if requested
+            if "non" in diet_lower and "veg_nonveg" in filtered.columns:
+                mask = filtered["veg_nonveg"] == "Non-Vegetarian"
+                filtered.loc[mask, "value_metric"] *= 5.0
+        else:
+            # ML failed, fall back to traditional method
+            use_ml = False
+    else:
+        use_ml = False
+    
+    # Fallback to traditional greedy method
+    if not use_ml:
+        print("📊 Using traditional greedy selection")
+        filtered["value_metric"] = filtered["nutri_score_app"] / filtered["price_per_100g"]
+        
+        # Goal Adjustments
+        if goal == "high_protein":
+            if "protein" in filtered.columns:
+                filtered["value_metric"] += (filtered["protein"] / filtered["price_per_100g"]) * 0.5
+                
+        elif goal == "low_sugar":
+            if "sugar" in filtered.columns:
+                filtered["value_metric"] -= (filtered["sugar"] / filtered["price_per_100g"]) * 0.5
 
-    # UX Improvement: If diet is explicitly Non-Vegetarian, boost non-veg items
-    # so they actually appear in the basket (otherwise cheap staples dominate)
-    if "non" in diet_lower and "veg_nonveg" in filtered.columns:
-        mask = filtered["veg_nonveg"] == "Non-Vegetarian"
-        filtered.loc[mask, "value_metric"] *= 10.0 # 10x boost to ensure meat is picked
+        # UX Improvement for non-veg
+        if "non" in diet_lower and "veg_nonveg" in filtered.columns:
+            mask = filtered["veg_nonveg"] == "Non-Vegetarian"
+            filtered.loc[mask, "value_metric"] *= 10.0
     
     # 3. Sort by Value Metric (Descending)
     candidates = filtered.sort_values(by="value_metric", ascending=False)
     
-    # 4. Greedy Selection
+    # 4. Intelligent Selection with Variety Optimization
     basket = []
     total_spent = 0.0
-    
-    # We want some variety, so let's limit quantity per item
-    # And maybe try to pick from different clusters?
-    # For now, simple greedy loop
     
     # Convert to list of dicts for faster iteration
     candidate_items = candidates.to_dict("records")
     
-    # Track counts to ensure variety (max 5 units per item)
+    # Track counts to ensure variety
     item_counts = {}
+    cluster_spending = {}  # Track spending per cluster for diversity
+    
+    # Calculate cluster budget limits (for ML mode only)
+    if use_ml and "cluster_label" in filtered.columns:
+        max_cluster_budget = budget * 0.35  # Max 35% per cluster
+    else:
+        max_cluster_budget = budget  # No limit for traditional mode
     
     for item in candidate_items:
         price = item["price_per_100g"]
+        cluster = item.get("cluster_label", "Unknown")
+        
+        # Check cluster budget limit (ML mode only)
+        if use_ml and cluster_spending.get(cluster, 0) + price > max_cluster_budget:
+            continue  # Skip to maintain variety
         
         # If we can afford it
         if total_spent + price <= budget:
             p_id = item["product_id"]
             current_count = item_counts.get(p_id, 0)
             
-            if current_count < 5: # Max 5 units
+            if current_count < 5: # Max 5 units per product
                 # Add to basket
-                # Check if already in basket to update quantity
                 existing = next((x for x in basket if x["product_id"] == p_id), None)
                 
                 if existing:
@@ -112,6 +154,7 @@ def planner(budget: float, people: int, diet_type: str, goal: str, df: pd.DataFr
                 
                 total_spent += price
                 item_counts[p_id] = current_count + 1
+                cluster_spending[cluster] = cluster_spending.get(cluster, 0) + price
         
         # Stop if we are very close to budget (e.g. < $0.5 left)
         if budget - total_spent < 0.5:
