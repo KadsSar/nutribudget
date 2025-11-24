@@ -6,3 +6,4 @@ scikit-learn
 pulp
 google-generativeai
 python-dotenv
+gunicorn
