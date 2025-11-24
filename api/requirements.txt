@@ -4,3 +4,5 @@ pandas
 numpy
 scikit-learn
 pulp
+google-generativeai
+python-dotenv
