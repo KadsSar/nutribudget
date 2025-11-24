@@ -179,7 +179,7 @@ export default function PlanShell() {
               Actual prices may vary by location and time. Nutritional data sourced from Health Canada and USDA databases.
               Always verify with your local store before purchasing.
             </p>
-            <p className="text-xs text-gray-500 mt-2">Last updated: November 2024</p>
+            <p className="text-xs text-gray-500 mt-2">Last updated: November 2025</p>
           </div>
         </div>
       </div>
