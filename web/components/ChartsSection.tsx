@@ -22,16 +22,22 @@ export default function ChartsSection({
     }
     setVisible(false);
   }, [clusterBreakdown, processingBreakdown]);
-  return (
-    <section className="h-full text-white">
-      <h2 className="text-xl font-medium mb-6 border-b border-white/10 pb-2">Breakdown</h2>
 
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-sm font-medium text-white/60 mb-3 uppercase tracking-wider">By Health Persona</h3>
+  // Calculate max value for better bar visualization
+  const clusterMax = Math.max(...Object.values(clusterBreakdown), 1);
+  const processingMax = Math.max(...Object.values(processingBreakdown), 1);
+
+  return (
+    <section className="h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Cluster Breakdown */}
+        <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-5 rounded-lg border-2 border-emerald-200">
+          <h3 className="text-sm font-bold text-emerald-800 mb-4 uppercase tracking-wider flex items-center gap-2">
+            <span>🏷️</span> By Category
+          </h3>
           <ul className="space-y-3">
             {(!clusterBreakdown || Object.entries(clusterBreakdown).length === 0) && (
-              <li className="text-white/40 italic text-sm">No data available</li>
+              <li className="text-gray-500 italic text-sm">No data available</li>
             )}
             {clusterBreakdown && Object.entries(clusterBreakdown).map(([label, count], i) => (
               <li
@@ -40,21 +46,15 @@ export default function ChartsSection({
                   }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
-                <div className="flex justify-between text-sm mb-1.5">
-                  <span className="text-white/90">{label}</span>
-                  <span className="font-mono text-[var(--accent-primary)]">{count}</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-gray-700 font-medium">{label}</span>
+                  <span className="font-bold text-emerald-600">{count} items</span>
                 </div>
-                {/* Visual bar for count? Maybe just a small indicator or relative to max? 
-                    For now, let's just show the count number as the bar width is tricky without total.
-                    Actually, let's assume max count is ~10 for visualization or just fill 100%?
-                    Let's just remove the bar for count, or make it relative to 10?
-                    Let's use a fixed width based on count/10 for now.
-                */}
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-3 w-full bg-white rounded-full overflow-hidden border border-emerald-200">
                   <div
-                    className="h-full bg-[var(--accent-primary)] transition-all duration-1000 ease-out"
+                    className="h-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-1000 ease-out"
                     style={{
-                      width: `${Math.min(count * 10, 100)}%`, // Rough viz
+                      width: `${(count / clusterMax) * 100}%`,
                       transitionDelay: `${i * 80 + 80}ms`,
                     }}
                   />
@@ -64,11 +64,14 @@ export default function ChartsSection({
           </ul>
         </div>
 
-        <div>
-          <h3 className="text-sm font-medium text-white/60 mb-3 uppercase tracking-wider">By Processing Level</h3>
+        {/* Processing Breakdown */}
+        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-lg border-2 border-blue-200">
+          <h3 className="text-sm font-bold text-blue-800 mb-4 uppercase tracking-wider flex items-center gap-2">
+            <span>🔬</span> Processing Level
+          </h3>
           <ul className="space-y-3">
             {(!processingBreakdown || Object.entries(processingBreakdown).length === 0) && (
-              <li className="text-white/40 italic text-sm">No data available</li>
+              <li className="text-gray-500 italic text-sm">No data available</li>
             )}
             {processingBreakdown && Object.entries(processingBreakdown).map(([label, count], i) => (
               <li
@@ -77,15 +80,15 @@ export default function ChartsSection({
                   }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
-                <div className="flex justify-between text-sm mb-1.5">
-                  <span className="text-white/90">{label}</span>
-                  <span className="font-mono text-[var(--accent-secondary)]">{count}</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-gray-700 font-medium">{label}</span>
+                  <span className="font-bold text-blue-600">{count} items</span>
                 </div>
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-3 w-full bg-white rounded-full overflow-hidden border border-blue-200">
                   <div
-                    className="h-full bg-[var(--accent-secondary)] transition-all duration-1000 ease-out"
+                    className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-1000 ease-out"
                     style={{
-                      width: `${Math.min(count * 10, 100)}%`,
+                      width: `${(count / processingMax) * 100}%`,
                       transitionDelay: `${i * 80 + 80}ms`,
                     }}
                   />
