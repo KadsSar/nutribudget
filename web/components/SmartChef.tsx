@@ -141,12 +141,16 @@ export default function SmartChef({ items }: Props) {
                                 )}
                             </div>
 
-                            <AnimatePresence>
+                            <AnimatePresence initial={false}>
                                 {expandedRecipe === idx && (
                                     <motion.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: "auto", opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
+                                        initial={{ opacity: 0, maxHeight: 0 }}
+                                        animate={{ opacity: 1, maxHeight: 1000 }}
+                                        exit={{ opacity: 0, maxHeight: 0 }}
+                                        transition={{
+                                            duration: 0.3,
+                                            ease: [0.4, 0.0, 0.2, 1]
+                                        }}
                                         className="overflow-hidden border-t border-gray-200"
                                     >
                                         <div className="p-4 bg-white space-y-4">
