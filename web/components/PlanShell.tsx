@@ -6,12 +6,11 @@ import BudgetForm from "./BudgetForm";
 import BasketList from "./BasketList";
 import NutritionSummary from "./NutritionSummary";
 import ChartsSection from "./ChartsSection";
-import MagicBento from "./MagicBento";
 import SDGSection from "./SDGSection";
 import MealSuggestions from "./MealSuggestions";
 import SmartChef from "./SmartChef";
 import LocalShopper from "./LocalShopper";
-import PlanSkeleton from "./PlanSkeleton"; // Added SmartChef import
+import PlanSkeleton from "./PlanSkeleton";
 import { exportShoppingList } from "../utils/exportList";
 import type { PlanResponse } from "../types/plan";
 
