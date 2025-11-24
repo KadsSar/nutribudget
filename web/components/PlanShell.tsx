@@ -167,6 +167,22 @@ export default function PlanShell() {
           </div>
         )}
       </div>
+
+      {/* Disclaimer Footer */}
+      <div className="max-w-6xl mx-auto mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="flex items-start gap-3 text-sm text-gray-600">
+          <span className="text-lg">ℹ️</span>
+          <div>
+            <p className="font-medium text-gray-700 mb-1">Data Disclaimer</p>
+            <p>
+              Prices and nutritional information are estimates based on Canadian grocery data (2024-2025).
+              Actual prices may vary by location and time. Nutritional data sourced from Health Canada and USDA databases.
+              Always verify with your local store before purchasing.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">Last updated: November 2024</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
