@@ -198,6 +198,61 @@ Receive a complete shopping list with:
 
 ---
 
+## 🧠 Machine Learning Details
+
+### Models & Architecture
+
+NutriBudget uses an **ensemble of three ML models** to intelligently select products:
+
+| Model | Algorithm | Purpose | Key Metrics |
+|-------|-----------|---------|-------------|
+| **Quality Classifier** | Random Forest (100 trees) | Classify product healthiness (High/Medium/Low) | Weighted F1: 0.38 |
+| **Value Predictor** | Random Forest Regression | Predict nutritional value scores | R²: 0.17 |
+| **Price Fairness** | Linear Regression | Estimate fair price to identify deals | R²: 0.32 |
+
+### How Models Work Together
+
+1. **Quality Classifier** scores each product's health quality based on nutritional profile
+2. **Value Predictor** estimates true nutritional value beyond simple metrics
+3. **Price Fairness** identifies underpriced products (where predicted price > actual price)
+4. **Combined ML Score** = 30% quality + 40% value + 30% deal bonus
+5. **Variety Optimizer** uses cluster labels to ensure diversity (max 35% per cluster)
+
+### Training Data
+
+- **Dataset Size:** 4,900 Canadian grocery products
+- **Features:** 7 nutritional metrics (calories, protein, carbs, fat, sugar, fiber) + price
+- **Training Split:** 80% train, 20% test (stratified)
+- **Pre-processing:** StandardScaler normalization, missing value imputation
+- **Clusters:** K-Means segmentation (Staples, Veg/Wholefoods, Processed/Snacks, High Energy)
+
+### Feature Engineering
+
+The models use these engineered features:
+- **Normalized nutritional values** (scaled to 0-1 range)
+- **Price per 100g** standardized across products
+- **Protein-to-price ratio** for high-protein goals
+- **Sugar penalty factor** for low-sugar optimization
+
+### Model Training
+
+To retrain models with updated data:
+
+```bash
+cd api
+python3 train_models.py
+```
+
+This will:
+- Load the latest `foods_scored.csv` dataset
+- Train all three models with hyperparameter optimization
+- Save models to `models/` directory
+- Generate performance metrics in `model_metrics.json`
+
+Models are automatically loaded when the API starts. Fallback to greedy algorithm if models unavailable.
+
+---
+
 ## 🚧 Roadmap
 
 What's next for NutriBudget:
