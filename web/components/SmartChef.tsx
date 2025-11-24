@@ -32,7 +32,8 @@ export default function SmartChef({ items }: Props) {
         setRecipes([]);
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/recipes", {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
+            const response = await fetch(`${API_URL}/api/recipes`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,8 +72,8 @@ export default function SmartChef({ items }: Props) {
                     onClick={generateRecipes}
                     disabled={loading || items.length === 0}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${loading
-                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg hover:scale-105"
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg hover:scale-105"
                         }`}
                 >
                     {loading ? (
@@ -126,8 +127,8 @@ export default function SmartChef({ items }: Props) {
                                             <Flame className="w-3 h-3 text-orange-500" /> {recipe.calories} kcal
                                         </span>
                                         <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold ${recipe.difficulty === "Easy" ? "bg-green-100 text-green-700" :
-                                                recipe.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
-                                                    "bg-red-100 text-red-700"
+                                            recipe.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
+                                                "bg-red-100 text-red-700"
                                             }`}>
                                             {recipe.difficulty}
                                         </span>
