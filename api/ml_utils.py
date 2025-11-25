@@ -45,31 +45,31 @@ def load_models():
 
 def prepare_features(df):
     """
-    Prepare features from dataframe for ML prediction.
-    
-    Args:
-        df: DataFrame with product data
-    
-    Returns:
-        DataFrame with scaled features
+    Prepare features for ML models.
+    Returns scaled features DataFrame.
     """
-    models = load_models()
-    if models is None:
-        return None
+    # Feature columns must match training
+    feature_cols = ['calories', 'protein', 'carbs', 'fat', 'sugar', 'fiber', 'price_per_100g', 'package_weight_g']
     
-    feature_cols = ['calories', 'protein', 'carbs', 'fat', 'sugar', 'fiber', 'price_per_100g']
+    # Ensure all columns exist, fill with 0 or defaults if missing
+    for col in feature_cols:
+        if col not in df.columns:
+            if col == 'package_weight_g':
+                df[col] = 300 # Default weight
+            else:
+                df[col] = 0
+                
+    X = df[feature_cols]
     
-    # Extract features
-    X = df[feature_cols].copy()
-    
-    # Fill missing values
-    X = X.fillna(X.mean())
-    
-    # Scale features
-    X_scaled = models['scaler'].transform(X)
-    X_scaled = pd.DataFrame(X_scaled, columns=feature_cols, index=X.index)
-    
-    return X_scaled
+    # Load scaler
+    scaler_path = os.path.join(MODELS_DIR, "feature_scaler.joblib")
+    if os.path.exists(scaler_path):
+        scaler = joblib.load(scaler_path)
+        X_scaled = scaler.transform(X)
+        return pd.DataFrame(X_scaled, columns=feature_cols)
+    else:
+        # Fallback if scaler not found (shouldn't happen in prod)
+        return X
 
 def predict_quality(df):
     """
