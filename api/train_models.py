@@ -42,15 +42,16 @@ def create_health_categories(df):
     df['health_category'] = np.select(conditions, categories, default='Medium')
     return df
 
-def prepare_features(df):
+def prepare_features(df, feature_cols=None):
     """
     Prepare feature matrices for ML training.
     Returns scaled features for prediction.
     """
     # Select nutritional features
-    feature_cols = [
-        'calories', 'protein', 'carbs', 'fat', 'sugar', 'fiber', 'price_per_100g'
-    ]
+    if feature_cols is None:
+        feature_cols = [
+            'calories', 'protein', 'carbs', 'fat', 'sugar', 'fiber', 'price_per_100g', 'package_weight_g'
+        ]
     
     # Ensure all features exist and handle missing values
     for col in feature_cols:
@@ -260,19 +261,26 @@ def main():
     # Create models directory
     os.makedirs(MODELS_DIR, exist_ok=True)
     
-    # Load data
-    print(f"\nLoading data from {DATA_PATH}...")
-    df = pd.read_csv(DATA_PATH)
-    print(f"Loaded {len(df)} products")
-    
-    # Create health categories
-    df = create_health_categories(df)
-    print(f"\nHealth Categories Distribution:")
-    print(df['health_category'].value_counts())
-    
+    # Load enhanced data
+    try:
+        df = pd.read_csv('data/foods_enhanced.csv')
+        print(f"Loaded {len(df)} products from enhanced dataset")
+    except FileNotFoundError:
+        print("❌ Enhanced dataset not found. Run enhance_data.py first.")
+        return
+
     # Prepare features
-    print("\nPreparing features...")
-    X, scaler = prepare_features(df)
+    # We add package_weight_g as a feature
+    feature_cols = ['calories', 'protein', 'carbs', 'fat', 'sugar', 'fiber', 'price_per_100g', 'package_weight_g']
+    
+    # Handle missing values
+    df = df.dropna(subset=feature_cols)
+    
+    X = df[feature_cols]
+    
+    # Prepare features (scaling)
+    print("\nPreparing features (scaling)...")
+    X, scaler = prepare_features(X, feature_cols)
     
     # Save scaler
     scaler_path = os.path.join(MODELS_DIR, "feature_scaler.joblib")
@@ -280,21 +288,32 @@ def main():
     print(f"Saved feature scaler to {scaler_path}")
     
     # Train Quality Classifier
-    y_quality = df['health_category']
+    print("\n🤖 Training Quality Classifier...")
+    # Create labels if not present (using health_score)
+    if 'quality_label' not in df.columns:
+        df['quality_label'] = pd.cut(df['health_score'], 
+                                   bins=[-1, 33, 66, 100], 
+                                   labels=['Low', 'Medium', 'High'])
+    
+    y_quality = df['quality_label']
     quality_model, quality_metrics = train_quality_classifier(X, y_quality)
     quality_path = os.path.join(MODELS_DIR, "quality_classifier.joblib")
     joblib.dump(quality_model, quality_path)
     print(f"\nSaved quality classifier to {quality_path}")
     
     # Train Value Predictor
+    print("\n📈 Training Value Predictor...")
+    # Target: nutri_score_app (0-100)
     y_value = df['nutri_score_app']
     value_model, value_metrics = train_value_predictor(X, y_value)
     value_path = os.path.join(MODELS_DIR, "value_predictor.joblib")
     joblib.dump(value_model, value_path)
     print(f"\nSaved value predictor to {value_path}")
     
-    # Train Price Predictor
-    y_price = df['price_per_100g']
+    # Train Price Predictor (Fair Price per ITEM)
+    print("\n💰 Training Price Predictor...")
+    # Target: price_per_item
+    y_price = df['price_per_item']
     price_model, price_metrics = train_price_predictor(X, y_price)
     price_path = os.path.join(MODELS_DIR, "price_predictor.joblib")
     joblib.dump(price_model, price_path)
