@@ -49,9 +49,6 @@
 
 ### Why I Chose a Web Application
 
-**Question you might get:** "Why a website instead of a mobile app?"
-
-**Your answer:**
 "I chose a web application because:
 1. **Accessible everywhere** - works on any device (phone, tablet, laptop)
 2. **No downloads needed** - just visit the URL
@@ -97,9 +94,8 @@ Database (4,900 products)
 
 ## 🧠 The Machine Learning Part (The Cool Stuff)
 
-### What is Machine Learning? (Simple Explanation)
+### What is Machine Learning?
 
-**Your explanation:**
 "Machine learning is like teaching a computer to make decisions by showing it examples. Instead of me writing rules like 'if protein > 10g, it's healthy', the computer learns patterns from thousands of products and figures out what makes food healthy on its own."
 
 **Analogy:**
@@ -685,7 +681,7 @@ Results in 2 seconds:
 ## 📝 Practice Script for 2-Minute Pitch
 
 **Opening (15 seconds):**
-"Hi, I'm [Name]. I built NutriBudget - an AI-powered grocery shopping assistant that helps families eat healthy on a budget."
+"Hi, I am Yagna. I built NutriBudget - an AI-powered grocery shopping assistant that helps families eat healthy on a budget."
 
 **Problem (20 seconds):**
 "Many families struggle with food costs. Healthy food seems expensive, and it's hard to know which products give the best nutrition for your money. This leads to poor dietary choices or overspending."
