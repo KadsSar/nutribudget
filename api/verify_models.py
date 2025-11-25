@@ -31,7 +31,8 @@ def verify_models():
             "fat": 0.4,
             "sugar": 0.4,
             "fiber": 2.2,
-            "price_per_100g": 0.50
+            "price_per_100g": 0.50,
+            "package_weight_g": 300 # 300g bag
         },
         {
             "product_name": "Chocolate Bar (Unhealthy)",
@@ -41,7 +42,8 @@ def verify_models():
             "fat": 30.0,
             "sugar": 54.0,
             "fiber": 3.0,
-            "price_per_100g": 1.50
+            "price_per_100g": 1.50,
+            "package_weight_g": 100 # 100g bar
         },
         {
             "product_name": "Lentils (High Value)",
@@ -51,7 +53,8 @@ def verify_models():
             "fat": 0.4,
             "sugar": 1.8,
             "fiber": 7.9,
-            "price_per_100g": 0.30
+            "price_per_100g": 0.30,
+            "package_weight_g": 900 # 900g bag
         }
     ]
     
@@ -67,23 +70,25 @@ def verify_models():
     
     for i, product in df.iterrows():
         name = product['product_name']
-        actual_price = product['price_per_100g']
+        weight = product['package_weight_g']
+        # Calculate actual item price for comparison
+        actual_item_price = (product['price_per_100g'] / 100) * weight
         
         predicted_quality = qualities[i]
         predicted_value = values[i]
         predicted_fair_price = fair_prices[i]
         
-        print(f"\nProduct: {name}")
-        print(f"  Actual Price: ${actual_price:.2f}/100g")
+        print(f"\nProduct: {name} ({weight}g)")
+        print(f"  Actual Price: ${actual_item_price:.2f}")
         print(f"  🤖 Predicted Quality: {predicted_quality}")
         print(f"  📈 Predicted Value Score: {predicted_value:.1f}/100")
-        print(f"  💰 Predicted Fair Price: ${predicted_fair_price:.2f}/100g")
+        print(f"  💰 Predicted Fair Price: ${predicted_fair_price:.2f}")
         
         # Analysis
-        if predicted_fair_price > actual_price:
-            print(f"  ✨ DEAL ALERT: Model thinks this is worth ${predicted_fair_price-actual_price:.2f} more!")
+        if predicted_fair_price > actual_item_price:
+            print(f"  ✨ DEAL ALERT: Model thinks this is worth ${predicted_fair_price-actual_item_price:.2f} more!")
         else:
-            print(f"  ⚠️ Overpriced: Model thinks this should cost ${actual_price-predicted_fair_price:.2f} less.")
+            print(f"  ⚠️ Overpriced: Model thinks this should cost ${actual_item_price-predicted_fair_price:.2f} less.")
 
 if __name__ == "__main__":
     verify_models()
