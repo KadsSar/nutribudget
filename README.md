@@ -312,7 +312,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Have questions?** Check out our [Deployment Guide](deployment_guide.md)
 
-**Want to contribute?** See the Contributing section above!
+**Want to contribute?** See the Contributing section above
 
 ---
 
